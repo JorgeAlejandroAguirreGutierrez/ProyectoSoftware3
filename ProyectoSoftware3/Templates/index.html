@@ -9,6 +9,8 @@ and open the template in the editor.
         <title>{% block title %}{% endblock %}</title>
         <meta charset="windows-1252">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load staticfiles %}
+        <link type="text/css" rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
     </head>
     <body>
         <div class="col-xs-2"></div>
@@ -19,6 +21,5 @@ and open the template in the editor.
         </div>
         <div class="col-xs-2"></div>
     </body>
-    {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+   
 </html>
