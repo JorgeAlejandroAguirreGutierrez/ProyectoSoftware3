@@ -4,4 +4,3 @@ Integrantes:
 - Tatiana Rendón Ramírez.
 - Nyllyreth Osorio.
 - Gian Carlos Figueroa.
-- Jorge Alejandro Aguirre.
