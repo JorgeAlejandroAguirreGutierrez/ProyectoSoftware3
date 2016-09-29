@@ -8,7 +8,9 @@ class Usuario(models.Model):
     nombre=models.CharField(max_length=200)
     cedula=models.CharField(max_length=200)
     clave=models.CharField(max_length=200)
-    
+#    def __str__(self):
+#        return "{'id':%d,'nombre':'%s','cedula':'%s','clave':'%s'}"%(self.id,self.nombre,self.cedula,self.clave)
+#    
 class VinculacionDocente(models.Model):
     tipo=models.CharField(max_length=200)
     
