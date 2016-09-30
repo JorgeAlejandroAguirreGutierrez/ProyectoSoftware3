@@ -49,10 +49,16 @@ class ProyectoForm(forms.ModelForm):
 		
         }
         widgets = {
-            'fecha': forms.DateInput(attrs={'class':'form-control','type':'date'}),
+            'fecha': forms.DateInput(attrs={'class':' col-xs-06','type':'date'}),
+            'fecha': forms.TextInput(attrs={'class':'form-control col-xs-06',}),
             'fecha_inicio': forms.DateInput(attrs={'class':'form-control','type':'date'}),
             'fecha_final': forms.DateInput(attrs={'class':'form-control','type':'date'}),
-        
+            'objetivo_general': forms.Textarea(attrs={'class':'form-control'}),
+            'impacto': forms.Textarea(attrs={'class':'form-control'}),
+            'poblacion': forms.Textarea(attrs={'class':'form-control'}),
+            'justificacion': forms.Textarea(attrs={'class':'form-control'}),
+            'metodologia': forms.Textarea(attrs={'class':'form-control'}),
+            
         }
 
         

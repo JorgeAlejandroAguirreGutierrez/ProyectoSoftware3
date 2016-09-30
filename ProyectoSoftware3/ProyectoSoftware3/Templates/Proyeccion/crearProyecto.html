@@ -1,7 +1,7 @@
 {% extends 'Proyeccion/docente.html' %}
 {% block contenido %}
 <FORM  method="POST"> {% csrf_token %} 
-    <TABLE class="table">
+    <TABLE class="table col-xs-12">
         {{ form.as_table }}      
     </TABLE>
     <input type="submit" id="btnRegistrar" value="Registrar"  class="btn"id="agregarFacultad"> 
