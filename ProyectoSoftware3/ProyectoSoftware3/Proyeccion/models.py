@@ -8,32 +8,40 @@ class Usuario(models.Model):
     nombre=models.CharField(max_length=200)
     cedula=models.CharField(max_length=200)
     clave=models.CharField(max_length=200)
+    def __str__(self):
+        return '%s'%(self.nombre)
 #    def __str__(self):
 #        return "{'id':%d,'nombre':'%s','cedula':'%s','clave':'%s'}"%(self.id,self.nombre,self.cedula,self.clave)
 #    
 class VinculacionDocente(models.Model):
     tipo=models.CharField(max_length=200)
-    
+    def __str__(self):
+        return '%s'%(self.tipo)
 class Docente(models.Model):
     valor_hora=models.IntegerField()
     vinculacion_id=models.ForeignKey(VinculacionDocente, on_delete=models.CASCADE)
     usuario_id=models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    
+    def __str__(self):
+        return '%s'%(self.usuario_id)
 class Departamento(models.Model):
     nombre=models.CharField(max_length=200)
     director_id=models.ForeignKey(Docente, on_delete=models.CASCADE)
     correo=models.CharField(max_length=200, null=True)
     telefono=models.CharField(max_length=200, null=True)
-    
+    def __str__(self):
+        return '%s'%(self.nombre)
 class Facultad(models.Model):
     nombre=models.CharField(max_length=200)
     decano_id=models.ForeignKey(Docente, on_delete=models.CASCADE)
     correo=models.CharField(max_length=200, null=True)
     telefono=models.CharField(max_length=200, null=True)
-    
+    def __str__(self):
+        return '%s'%(self.nombre)
 class Modalidad(models.Model):
     nombre=models.CharField(max_length=200)
     relevancia=models.IntegerField(null=True)
+    def __str__(self):
+        return '%s'%(self.nombre)
     
 class InformacionDescriptiva(models.Model):
     fecha=models.DateField()
@@ -52,7 +60,11 @@ class InformacionDescriptiva(models.Model):
     impacto=models.CharField(max_length=200, null=True)
     poblacion=models.CharField(max_length=200, null=True)
     metodologia=models.CharField(max_length=200, null=True)
+    def __str__(self):
+        return '%s'%(self.titulo)
     
 class ObjetivoEspelcifico(models.Model):
     objetivo=models.CharField(max_length=200, null=True)
     informacion_descriptiva_id=models.ForeignKey(InformacionDescriptiva, on_delete=models.CASCADE)
+    def __str__(self):
+        return '%s'%(self.objetivo)

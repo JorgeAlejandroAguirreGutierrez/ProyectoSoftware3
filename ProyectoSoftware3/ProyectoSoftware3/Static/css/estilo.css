@@ -1,29 +1,29 @@
 
-/*#Facultades {
+#proyectos {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-#Facultades td, #Facultades th {
+#proyectos td, #Facultades th {
     border: 1px solid #ddd;
     padding: 8px;
 }
-#Facultades tr 
+#proyectos tr 
 {
     background-color: #d9edf7;
 }
-#Facultades tr:nth-child(even){background-color: #f2f2f2;}
+#proyectos tr:nth-child(even){background-color: #f2f2f2;}
 
-#Facultades tr:hover {background-color: #ddd;}
+#proyectos tr:hover {background-color: #ddd;}
 
-#Facultades th {
+#proyectos th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
     background-color: #1b6d85;
     color: white;
-}*/
+}
 
 #banner
 {

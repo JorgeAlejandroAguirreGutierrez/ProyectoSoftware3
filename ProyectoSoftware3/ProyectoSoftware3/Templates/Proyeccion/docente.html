@@ -6,5 +6,17 @@ Docente
 
 {% block content %}
 <h1>Bienvenido docente:  {{nombre}}</h1>
-<a href="/Proyeccion/CerrarSession/" class="btn btn-danger"  > cerrarSession</a>
+<div id='cssmenu'>
+    <ul>
+        <li class='active'><a href='#'>Home</a></li>
+        <li><a href='/Proyeccion/crearProyecto'>Nuevo Proyecto</a></li>
+        <li><a href='/Proyeccion/Proyectos'>Consultar Proyectos</a></li>
+        <li><a href="/Proyeccion/CerrarSession/" > cerrarSession</a></li>
+    </ul>
+</div>
+<div id="content" class="col-xs-12">
+    {% block contenido %}
+    {% endblock %}
+</div>
+
 {% endblock %}

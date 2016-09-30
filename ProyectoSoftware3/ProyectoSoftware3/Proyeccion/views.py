@@ -1,17 +1,29 @@
-from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
-from models import Usuario
 from django.core.urlresolvers import reverse_lazy
-import json
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic import CreateView
 from django.views.generic import TemplateView
+from django.views.generic import View
+import json
+from models import InformacionDescriptiva
+from models import Usuario
+from forms import ProyectoForm
 
 # Create your views here.
 def docente(request):
     if "cedula" in request.session:
-        cedula=request.session["cedula"]
-        usuario=Usuario.objects.get(cedula=cedula)
+        cedula = request.session["cedula"]
+        usuario = Usuario.objects.get(cedula=cedula)
         
-        return render(request,"Proyeccion/docente.html",{'nombre':usuario.nombre})
+        return render(request, "Proyeccion/docente.html", {'nombre':usuario.nombre})
+    else:
+        return HttpResponseRedirect("/")
+def proyectos(request):
+    if "cedula" in request.session:
+        cedula = request.session["cedula"]
+        usuario = Usuario.objects.get(cedula=cedula)     
+        return render(request, "Proyeccion/proyectos.html", {'nombre':usuario.nombre})
     else:
         return HttpResponseRedirect("/")
 def cerrarSession(request):
@@ -21,15 +33,13 @@ def cerrarSession(request):
         pass
     return HttpResponseRedirect("/")
 
-
-def inicio (request):
-    return render(request, 'inicio/login.html', {})
-class logear(TemplateView):
-    
+class Logear(View):
     def get(self, request, * args, ** kwargs):
         
-        usuario = request.GET['usuario']
-        clave = request.GET['clave']    
+        return render(request, 'inicio/login.html', {})
+    def post(self, request, * args, ** kwargs):
+        usuario = request.POST['usuario']
+        clave = request.POST['clave']    
         try:  
             user = Usuario.objects.get(cedula=usuario, clave=clave)            
             #data = serializers.serialize('json', user, fields=('nombre'))
@@ -38,6 +48,31 @@ class logear(TemplateView):
             request.session['cedula'] = user.cedula
         except Usuario.DoesNotExist:
             response_data = {}
-            response_data['respuesta'] = 'noExiste'
-          
+            response_data['respuesta'] = 'noExiste'          
         return HttpResponse(json.dumps(response_data), content_type='application/json')
+
+    
+class CrearProyecto(CreateView):
+    template_name = 'Proyeccion/crearProyecto.html'
+    model = InformacionDescriptiva
+    user = ""
+    form_class = ProyectoForm
+    success_url = reverse_lazy('listarProyectos')
+    #fields = ['modalidad_id']
+#    def post(self, request, *args, **kwargs):
+#		self.object = self.get_object
+#		form = self.form_class(request.POST)
+#		form2 = self.second_form_class(request.POST)
+#		if form.is_valid() and form2.is_valid():
+#			solicitud = form.save(commit=False)
+#			solicitud.persona = form2.save()
+#			solicitud.save()
+#			return HttpResponseRedirect(self.get_success_url())
+#		else:
+#			return self.render_to_response(self.get_context_data(form=form, form2=form2))
+    def get_context_data(self, ** kwargs):
+	context = super(CrearProyecto, self).get_context_data(** kwargs)
+        return context
+
+       
+	
