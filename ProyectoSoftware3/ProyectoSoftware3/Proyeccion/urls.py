@@ -4,5 +4,5 @@ from views import docente,cerrarSession
 urlpatterns = [
     url(r'^Docente/$', docente),
     url(r'^CerrarSession/$', cerrarSession),
-    
 ]
+
