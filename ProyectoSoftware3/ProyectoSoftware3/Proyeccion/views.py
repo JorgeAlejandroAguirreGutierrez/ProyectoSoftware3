@@ -57,7 +57,7 @@ class Logear(View):
 class CrearProyecto(CreateView):
     template_name = 'Proyeccion/crearProyecto.html'
     model = InformacionDescriptiva
-    user = ""
+    nombre = ""
     form_class = ProyectoForm
     success_url = reverse_lazy('listarProyectos')
     #fields = ['modalidad_id']
@@ -72,20 +72,36 @@ class CrearProyecto(CreateView):
 #			return HttpResponseRedirect(self.get_success_url())
 #		else:
 #			return self.render_to_response(self.get_context_data(form=form, form2=form2))
-    
+    def get(self,request, *args, **kwargs):
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            self.nombre=usuario.nombre
+            return super(CrearProyecto, self).get(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect("/")
     def get_context_data(self, ** kwargs):
 	context = super(CrearProyecto, self).get_context_data(** kwargs)
+        context['nombre'] = self.nombre
         return context
 
 class ConsultarProyectos(View):
+
 #    template_name='Proyeccion/consultarProyectos.html'
 #    context_object_name = 'informacion_list'
 #    datos=None
 #    model=InformacionDescriptiva
     def get(self, request, * args, ** kwargs):
         informacion_list=InformacionDescriptiva.objects.filter(coordinador_id=request.session['identificador'])
-        return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list})
-    
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            nombre=usuario.nombre
+            return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list,'nombre':nombre})
+        else:
+            return HttpResponseRedirect("/")
+        
+  
 #    def get_queryset(self):
 #        return InformacionDescriptiva.objects.filter(coordinador_id=self.datos['cedula'])
     
@@ -97,5 +113,18 @@ class ModificarProyecto(UpdateView):
     template_name='Proyeccion/modificarProyecto.html'
     model=InformacionDescriptiva
     form_class = ProyectoForm
+    nombre=""
     success_url=reverse_lazy('ConsultarProyectos')
+    def get(self,request, *args, **kwargs):
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            self.nombre=usuario.nombre
+            return super(ModificarProyecto, self).get(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect("/")
+    def get_context_data(self, ** kwargs):
+	context = super(ModificarProyecto, self).get_context_data(** kwargs)
+        context['nombre'] = self.nombre
+        return context
 #    fields='__all__'

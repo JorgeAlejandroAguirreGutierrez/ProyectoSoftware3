@@ -1,23 +1,23 @@
 
-#proyectos {
+#consultarProyectos {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-#proyectos td, #Facultades th {
+#consultarProyectos td, #Facultades th {
     border: 1px solid #ddd;
     padding: 8px;
 }
-#proyectos tr 
+#consultarProyectos tr 
 {
     background-color: #d9edf7;
 }
-#proyectos tr:nth-child(even){background-color: #f2f2f2;}
+#consultarProyectos tr:nth-child(even){background-color: #f2f2f2;}
 
-#proyectos tr:hover {background-color: #ddd;}
+#consultarProyectos tr:hover {background-color: #ddd;}
 
-#proyectos th {
+#consultarProyectos th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
