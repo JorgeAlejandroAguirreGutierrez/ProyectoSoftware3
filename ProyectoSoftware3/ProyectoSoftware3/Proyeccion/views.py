@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import CreateView
-from django.views.generic import TemplateView
+from django.views.generic import UpdateView
 from django.views.generic import View
 import json
 from models import InformacionDescriptiva
@@ -19,6 +19,7 @@ def docente(request):
         return render(request, "Proyeccion/docente.html", {'nombre':usuario.nombre})
     else:
         return HttpResponseRedirect("/")
+    
 def proyectos(request):
     if "cedula" in request.session:
         cedula = request.session["cedula"]
@@ -26,6 +27,7 @@ def proyectos(request):
         return render(request, "Proyeccion/proyectos.html", {'nombre':usuario.nombre})
     else:
         return HttpResponseRedirect("/")
+    
 def cerrarSession(request):
     try:
         del request.session['cedula']
@@ -35,7 +37,6 @@ def cerrarSession(request):
 
 class Logear(View):
     def get(self, request, * args, ** kwargs):
-        
         return render(request, 'inicio/login.html', {})
     def post(self, request, * args, ** kwargs):
         usuario = request.POST['usuario']
@@ -46,6 +47,7 @@ class Logear(View):
             response_data = {}
             response_data['respuesta'] = 'existe'  
             request.session['cedula'] = user.cedula
+            request.session['identificador'] = user.id
         except Usuario.DoesNotExist:
             response_data = {}
             response_data['respuesta'] = 'noExiste'          
@@ -70,9 +72,30 @@ class CrearProyecto(CreateView):
 #			return HttpResponseRedirect(self.get_success_url())
 #		else:
 #			return self.render_to_response(self.get_context_data(form=form, form2=form2))
+    
     def get_context_data(self, ** kwargs):
 	context = super(CrearProyecto, self).get_context_data(** kwargs)
         return context
 
-       
-	
+class ConsultarProyectos(View):
+#    template_name='Proyeccion/consultarProyectos.html'
+#    context_object_name = 'informacion_list'
+#    datos=None
+#    model=InformacionDescriptiva
+    def get(self, request, * args, ** kwargs):
+        informacion_list=InformacionDescriptiva.objects.filter(coordinador_id=request.session['identificador'])
+        return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list})
+    
+#    def get_queryset(self):
+#        return InformacionDescriptiva.objects.filter(coordinador_id=self.datos['cedula'])
+    
+#    def get_context_data(self, **kwargs):
+#        context = super(ArticleListView, self).get_context_data(**kwargs)
+#        return context
+
+class ModificarProyecto(UpdateView):
+    template_name='Proyeccion/modificarProyecto.html'
+    model=InformacionDescriptiva
+    form_class = ProyectoForm
+    success_url=reverse_lazy('ConsultarProyectos')
+#    fields='__all__'
