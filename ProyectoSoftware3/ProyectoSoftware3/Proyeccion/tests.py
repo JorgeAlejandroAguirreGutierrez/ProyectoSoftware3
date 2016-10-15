@@ -139,7 +139,9 @@ class updateProjectTest(TestCase):
             proyecto = InformacionDescriptiva.objects.get(codigo="VPU-000")
             proyecto.departamento=None
             proyecto.save()
+            print proyecto
             self.assertTrue(False) 
+            
         except:
             self.assertTrue(True)
         
