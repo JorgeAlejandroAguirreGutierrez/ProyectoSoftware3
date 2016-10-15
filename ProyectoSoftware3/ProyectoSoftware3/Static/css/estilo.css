@@ -28,12 +28,9 @@
 #banner
 {
     height: 170px;
-    width: 800px;
-    text-align: center;
-    margin-left: 120px;
 }
 body {
-    background-color: #269abc;
+    background-color: #4DBD88
 }
 h1
 {

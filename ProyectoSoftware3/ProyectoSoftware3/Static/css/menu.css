@@ -33,7 +33,7 @@
   line-height: 1;
 }
 #cssmenu > ul {
-  background: #4DBD88;
+  background: #3db2e1;
 }
 #cssmenu > ul > li {
   float: left;
@@ -59,7 +59,7 @@
   letter-spacing: 1px;
   text-transform: uppercase;
   text-decoration: none;
-  background: #4DBD88;
+  background: #3db2e1;
   -webkit-transition: all .3s;
   -moz-transition: all .3s;
   -o-transition: all .3s;
@@ -109,7 +109,7 @@
 }
 #cssmenu > ul > li:hover > a::before,
 #cssmenu > ul > li > a:hover::before {
-  background: #4DBD88;
+  background: #3db2e1;
 }
 #cssmenu.small-screen {
   width: 100%;
@@ -145,7 +145,7 @@
   color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 1px;
-  background: #4DBD88;
+  background: #3db2e1;
 }
 #cssmenu.small-screen #menu-button:after {
   content: "";
