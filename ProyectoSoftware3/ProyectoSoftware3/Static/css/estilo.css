@@ -30,7 +30,10 @@
     height: 170px;
 }
 body {
-    background-color: #4DBD88
+    background-color: #3db2e1;
+    width: 800px;
+    text-align: center;
+    margin-left: 120px;
 }
 h1
 {
@@ -52,7 +55,7 @@ h1
 }*/
 #btnIngresar
 {
-    border-color: #4DBD88;
+    border-color: #3db2e1;
     background-color: #269abc;
     height: 44px;
     width: 100%;
