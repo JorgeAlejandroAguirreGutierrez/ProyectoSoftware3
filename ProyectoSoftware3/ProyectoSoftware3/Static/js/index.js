@@ -30,8 +30,6 @@ $(function () {
             }
         }
     });
-
-    $("#accordion").accordion();
     
     $("#btnIngresar").click(function () {
 
