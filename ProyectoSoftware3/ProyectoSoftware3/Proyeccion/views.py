@@ -8,7 +8,7 @@ from django.views.generic import View
 import json
 from models import InformacionDescriptiva
 from models import Usuario
-from forms import ProyectoForm
+from forms import InformacionDescriptivaForm
 
 # Create your views here.
 def docente(request):
@@ -42,8 +42,7 @@ class Logear(View):
         usuario = request.POST['usuario']
         clave = request.POST['clave']    
         try:  
-            user = Usuario.objects.get(cedula=usuario, clave=clave)            
-            #data = serializers.serialize('json', user, fields=('nombre'))
+            user = Usuario.objects.get(cedula=usuario, clave=clave)
             response_data = {}
             response_data['respuesta'] = 'existe'  
             request.session['cedula'] = user.cedula
@@ -57,21 +56,9 @@ class Logear(View):
 class CrearProyecto(CreateView):
     template_name = 'Proyeccion/crearProyecto.html'
     model = InformacionDescriptiva
+    form_class = InformacionDescriptivaForm
     nombre = ""
-    form_class = ProyectoForm
     success_url = reverse_lazy('listarProyectos')
-    #fields = ['modalidad_id']
-#    def post(self, request, *args, **kwargs):
-#		self.object = self.get_object
-#		form = self.form_class(request.POST)
-#		form2 = self.second_form_class(request.POST)
-#		if form.is_valid() and form2.is_valid():
-#			solicitud = form.save(commit=False)
-#			solicitud.persona = form2.save()
-#			solicitud.save()
-#			return HttpResponseRedirect(self.get_success_url())
-#		else:
-#			return self.render_to_response(self.get_context_data(form=form, form2=form2))
     def get(self,request, *args, **kwargs):
         if "cedula" in request.session:
             cedula = request.session["cedula"]
@@ -86,11 +73,6 @@ class CrearProyecto(CreateView):
         return context
 
 class ConsultarProyectos(View):
-
-#    template_name='Proyeccion/consultarProyectos.html'
-#    context_object_name = 'informacion_list'
-#    datos=None
-#    model=InformacionDescriptiva
     def get(self, request, * args, ** kwargs):
         informacion_list=InformacionDescriptiva.objects.filter(coordinador_id=request.session['identificador'])
         if "cedula" in request.session:
@@ -100,19 +82,11 @@ class ConsultarProyectos(View):
             return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list,'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
-        
-  
-#    def get_queryset(self):
-#        return InformacionDescriptiva.objects.filter(coordinador_id=self.datos['cedula'])
-    
-#    def get_context_data(self, **kwargs):
-#        context = super(ArticleListView, self).get_context_data(**kwargs)
-#        return context
 
 class ModificarProyecto(UpdateView):
     template_name='Proyeccion/modificarProyecto.html'
-    model=InformacionDescriptiva
-    form_class = ProyectoForm
+    model= InformacionDescriptiva
+    form_class = InformacionDescriptivaForm
     nombre=""
     success_url=reverse_lazy('ConsultarProyectos')
     def get(self,request, *args, **kwargs):
@@ -127,4 +101,3 @@ class ModificarProyecto(UpdateView):
 	context = super(ModificarProyecto, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
-#    fields='__all__'

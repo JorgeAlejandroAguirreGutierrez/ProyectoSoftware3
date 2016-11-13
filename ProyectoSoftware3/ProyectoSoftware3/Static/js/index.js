@@ -1,3 +1,4 @@
+
 $(function () {
     function getCookie(name) {
         var cookieValue = null;
@@ -20,7 +21,7 @@ $(function () {
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
-    
+
 
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
@@ -30,6 +31,8 @@ $(function () {
         }
     });
 
+    $("#accordion").accordion();
+    
     $("#btnIngresar").click(function () {
 
 
@@ -44,7 +47,7 @@ $(function () {
             $.ajax({
                 url: '/',
                 type: 'POST',
-                data: { 'usuario': usuario, 'clave': clave},
+                data: {'usuario': usuario, 'clave': clave},
                 dataType: "json",
                 success: function (data)
                 {
