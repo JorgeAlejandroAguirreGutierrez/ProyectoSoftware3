@@ -3,7 +3,7 @@
 # and open the template in the editor.
 from django import forms
 from models import InformacionDescriptiva
-class ProyectoForm(forms.ModelForm):
+class InformacionDescriptivaForm(forms.ModelForm):
     class Meta:
         model = InformacionDescriptiva
 

@@ -34,8 +34,6 @@ class RegisterProjectTest(TestCase):
         Facultad.objects.create(nombre="CIENCIAS PARA LA SALUD", decano_id=docente,
         correo="SAUD@UCALDAS.EDU.CO", telefono="8754522")
         
-        
-        
     def test_registerProjectValidate(self):
       
         docente= Docente.objects.get(valor_hora=35000)

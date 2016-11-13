@@ -8,7 +8,7 @@ from django.views.generic import View
 import json
 from models import InformacionDescriptiva
 from models import Usuario
-from forms import ProyectoForm
+from forms import InformacionDescriptivaForm
 
 # Create your views here.
 #En esta vistas se valida el login de acceso a la aplicacion
@@ -47,10 +47,15 @@ class Logear(View):
     def post(self, request, * args, ** kwargs):
         usuario = request.POST['usuario']
         clave = request.POST['clave']    
+<<<<<<< HEAD
         try:
             
             user = Usuario.objects.get(cedula=usuario, clave=clave)            
             #data = serializers.serialize('json', user, fields=('nombre'))
+=======
+        try:  
+            user = Usuario.objects.get(cedula=usuario, clave=clave)
+>>>>>>> refs/remotes/origin/rama-jorge2
             response_data = {}
             response_data['respuesta'] = 'existe'  
             request.session['cedula'] = user.cedula
@@ -64,9 +69,10 @@ class Logear(View):
 class CrearProyecto(CreateView):
     template_name = 'Proyeccion/crearProyecto.html'
     model = InformacionDescriptiva
+    form_class = InformacionDescriptivaForm
     nombre = ""
-    form_class = ProyectoForm
     success_url = reverse_lazy('listarProyectos')
+<<<<<<< HEAD
     #fields = ['modalidad_id']
 #    def post(self, request, *args, **kwargs):
 #		self.object = self.get_object
@@ -81,6 +87,8 @@ class CrearProyecto(CreateView):
 #			return self.render_to_response(self.get_context_data(form=form, form2=form2))
     #Valido si hay una session existente o si no renderizo de nuevo a la pagina de 
     #Login
+=======
+>>>>>>> refs/remotes/origin/rama-jorge2
     def get(self,request, *args, **kwargs):
         #validamos la session
         if "cedula" in request.session:
@@ -100,6 +108,7 @@ class CrearProyecto(CreateView):
 #Vista Consultar Proyectos muestra los difentes proyectos que han sido
 #registrados por parte de algun docente coordinador
 class ConsultarProyectos(View):
+<<<<<<< HEAD
 
 #    template_name='Proyeccion/consultarProyectos.html'
 #    context_object_name = 'informacion_list'
@@ -107,6 +116,8 @@ class ConsultarProyectos(View):
 #    model=InformacionDescriptiva
     #Valido si hay una session existente o si no renderizo de nuevo a la pagina de 
     #Login
+=======
+>>>>>>> refs/remotes/origin/rama-jorge2
     def get(self, request, * args, ** kwargs):
         informacion_list=InformacionDescriptiva.objects.filter(coordinador_id=request.session['identificador'])
         if "cedula" in request.session:
@@ -116,6 +127,7 @@ class ConsultarProyectos(View):
             return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list,'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
+<<<<<<< HEAD
         
   
 #    def get_queryset(self):
@@ -126,10 +138,13 @@ class ConsultarProyectos(View):
 #        return context
 #Nos muestra el proyecto seleccionado para hacerle alguna modificacion a la 
 #informacion descriptiva del proyecto 
+=======
+
+>>>>>>> refs/remotes/origin/rama-jorge2
 class ModificarProyecto(UpdateView):
     template_name='Proyeccion/modificarProyecto.html'
-    model=InformacionDescriptiva
-    form_class = ProyectoForm
+    model= InformacionDescriptiva
+    form_class = InformacionDescriptivaForm
     nombre=""
     success_url=reverse_lazy('ConsultarProyectos')
     #Valido si hay una session existente o si no renderizo de nuevo a la pagina de 
@@ -149,4 +164,3 @@ class ModificarProyecto(UpdateView):
 	context = super(ModificarProyecto, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
-#    fields='__all__'
