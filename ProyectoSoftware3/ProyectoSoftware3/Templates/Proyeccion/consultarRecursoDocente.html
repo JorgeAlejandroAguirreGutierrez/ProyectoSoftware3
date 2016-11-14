@@ -24,10 +24,13 @@
                 <td>{{informacion.fecha_final}}</td>
                 <td>{{informacion.tipo_financiacion}}</td>
                 <td>{{informacion.proyecto_id}}</td>
-                <td><a href="/Proyeccion/modificarRecursoDocente/{{informacion.id}}">Editar</a></td>
+                <td>
+                    <a href="/Proyeccion/modificarRecursoDocente/{{informacion.id}}">Editar</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <button class="btn btn-lg btn-primary" onclick="window.location.href='/Proyeccion/CrearRecursoDocente/{{informacion.id}}'">Registrar docente</button>
 </div>
 {% endblock %}
