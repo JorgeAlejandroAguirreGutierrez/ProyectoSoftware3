@@ -2,7 +2,7 @@
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
 from django import forms
-from models import InformacionDescriptiva
+from models import InformacionDescriptiva,RecursoEstudiante,RecursoDocente
 class InformacionDescriptivaForm(forms.ModelForm):
     class Meta:
         model = InformacionDescriptiva
@@ -66,5 +66,68 @@ class InformacionDescriptivaForm(forms.ModelForm):
             'problema': forms.Textarea(attrs={'class':'form-control'}),
         }
     
+class ModificarRecursoEstudianteForm(forms.ModelForm):
+    class Meta:
+        model = RecursoEstudiante
+        fields = [
+            'nombre',
+            'codigo',
+            'programa_id',
+            'semestre',
+            'numero_horas_semana',
+            'fecha_inicio',
+            'fecha_final',
+            'proyecto_id',
+        ]
+        labels = {
+            'nombre':'NOMBRE',
+            'codigo':'CODIGO',
+            'programa_id':'PROGRAMA',
+            'semestre':'SEMESTRE',
+            'numero_horas_semana':'NUM HORAS SEMANALES',
+            'fecha_inicio':'FECHA INICIAL',
+            'fecha_final':'FECHA FINAL',
+            'proyecto_id':'NOMBRE PROYECTO ',
+		
+        }
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class':'form-control'}),
+            'codigo': forms.TextInput(attrs={'class':'form-control'}),
+            'programa_id': forms.TextInput(attrs={'class':'form-control'}),
+            'semestre': forms.TextInput(attrs={'class':'form-control'}),
+            'numero_horas_semana': forms.TextInput(attrs={'class':'form-control'}),
+            'fecha_inicio': forms.DateInput(attrs={'class':'form-control','type':'date'}),
+            'fecha_final': forms.DateInput(attrs={'class':'form-control','type':'date'}),
+            'proyecto_id': forms.Select(attrs={'class':'form-control'}),
+        }
+ 
     
+class ModificarRecursoDocenteForm(forms.ModelForm):
+    class Meta:
+        model = RecursoDocente
+        fields = [
+            'docente_id',
+            'numero_horas_semana',
+            'fecha_inicio',
+            'fecha_final',
+            'tipo_financiacion',
+            'proyecto_id',
+        ]
+        labels = {
+            'docente_id':'DOCENTE',
+            'numero_horas_semana':'NUM HORAS SEMANALES',
+            'fecha_inicio':'FECHA INICIO',
+            'fecha_final':'FECHA FINAL',
+            'tipo_financiacion':'FINANCIACION',
+            'proyecto_id':'PROYECTO',
+            	
+        }
+        widgets = {
+            'docente_id': forms.Select(attrs={'class':'form-control'}),
+            'numero_horas_semana': forms.TextInput(attrs={'class':'form-control'}),
+            'fecha_inicio': forms.DateInput(attrs={'class':'form-control','type':'date'}),
+            'fecha_final': forms.DateInput(attrs={'class':'form-control','type':'date'}),
+            'tipo_financiacion': forms.TextInput(attrs={'class':'form-control'}),
+            'proyecto_id': forms.Select(attrs={'class':'form-control'}),
+        }
 
