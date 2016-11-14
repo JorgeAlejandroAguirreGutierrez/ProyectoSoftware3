@@ -71,7 +71,8 @@ class InformacionDescriptiva(models.Model):
 class Proyecto(models.Model):
     activo=models.BooleanField(blank=True)
     informacion_descriptiva_id=models.ForeignKey(InformacionDescriptiva, on_delete=models.CASCADE)
-    
+    def __str__(self):
+        return '%s'%(self.informacion_descriptiva_id)
 class RecursoDocente(models.Model):
     docente_id=models.ForeignKey(Docente, on_delete=models.CASCADE)
     numero_horas_semana=models.IntegerField(null=False, blank=False)
@@ -87,6 +88,8 @@ class Programa(models.Model):
     nombre=models.CharField(null=False, blank=False, max_length=200)
     director_id=models.ForeignKey(Docente, on_delete=models.CASCADE)
     facultad_id=models.ForeignKey(Facultad, on_delete=models.CASCADE)
+    def __str__(self):
+        return '%s'%(self.nombre)
     
 class RecursoEstudiante(models.Model):
     nombre=models.CharField(null=True, blank=True, max_length=200)

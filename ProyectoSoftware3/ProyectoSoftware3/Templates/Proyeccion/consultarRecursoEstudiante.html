@@ -1,0 +1,35 @@
+{% extends 'Proyeccion/docente.html' %}
+{% block contenido %}
+<br>
+<br>
+<div class="table-responsive">
+    <table class="table table-bordered" id="consultarProyectos">
+        <thead>
+            <tr>
+                <th>NOMBRE</th>
+                <th>CODIGO </th>
+                <th>PROGRAMA </th>
+                <th>SEMESTRE</th>
+                <th>NUM HORAS SEMANALES</th>
+                <th>FECHA INICIO</th>
+                <th>FECHA FIN</th>
+                <th>OPCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for informacion in informacion_list %}
+            <tr>
+                <td>{{informacion.nombre}}</td>
+                <td>{{informacion.codigo}}</td>
+                <td>{{informacion.programa_id}}</td>
+                <td>{{informacion.semestre}}</td>
+                <td>{{informacion.numero_horas_semana}}</td>
+                <td>{{informacion.fecha_inicio}}</td>
+                <td>{{informacion.fecha_final}}</td>
+                <td><a href="/Proyeccion/modificarRecursoEstudiante/{{informacion.id}}">Editar</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
