@@ -87,6 +87,8 @@ class Programa(models.Model):
     nombre=models.CharField(null=False, blank=False, max_length=200)
     director_id=models.ForeignKey(Docente, on_delete=models.CASCADE)
     facultad_id=models.ForeignKey(Facultad, on_delete=models.CASCADE)
+    def __str__(self):
+        return '%s'%(self.nombre)
     
 class RecursoEstudiante(models.Model):
     nombre=models.CharField(null=True, blank=True, max_length=200)

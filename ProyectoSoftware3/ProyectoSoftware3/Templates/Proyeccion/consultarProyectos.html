@@ -13,7 +13,7 @@
                 <th>COORDINADOR</th>
                 <th>FECHA INICIO</th>
                 <th>FECHA FIN</th>
-                <th>EDITAR</th>
+                <th>OPCIONES</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +26,11 @@
                 <td>{{informacion.coordinador_id}}</td>
                 <td>{{informacion.fecha_inicio}}</td>
                 <td>{{informacion.fecha_final}}</td>
-                <td><a href="/Proyeccion/modificarProyecto/{{informacion.id}}">X</a></td>
+                <td>
+                    <a href="/Proyeccion/modificarProyecto/{{informacion.id}}">Modificar</a>
+                    <a href="/Proyeccion/recursoEstudiante/{{informacion.id}}">Recurso Estudiante</a>
+                    <a href="/Proyeccion/recursoDocente/{{informacion.id}}">Recurso Docente</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

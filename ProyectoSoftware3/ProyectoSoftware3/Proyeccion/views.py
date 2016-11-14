@@ -6,7 +6,7 @@ from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import View
 import json
-from models import InformacionDescriptiva
+from models import InformacionDescriptiva,RecursoEstudiante
 from models import Usuario
 from forms import InformacionDescriptivaForm
 
@@ -71,7 +71,16 @@ class CrearProyecto(CreateView):
 	context = super(CrearProyecto, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
-
+class ConsultarRecursoEstudiante(View):
+    def get(self, request, * args, ** kwargs):
+        informacion_list=RecursoEstudiante.objects.filter(proyecto_id=request.session['identificador'])
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            nombre=usuario.nombre
+            return render(request, "Proyeccion/consultarRecursoEstudiante.html", {'informacion_list':informacion_list,'nombre':nombre})
+        else:
+            return HttpResponseRedirect("/")
 class ConsultarProyectos(View):
     def get(self, request, * args, ** kwargs):
         informacion_list=InformacionDescriptiva.objects.filter(coordinador_id=request.session['identificador'])
@@ -83,6 +92,24 @@ class ConsultarProyectos(View):
         else:
             return HttpResponseRedirect("/")
 
+class ModificarRecursoEstudiante(UpdateView):
+    template_name='Proyeccion/modificarRecursoEstudiante.html'
+    model= RecursoEstudiante
+    #form_class = InformacionDescriptivaForm
+    nombre=""
+    success_url=reverse_lazy('ConsultarRecursoEstudiante')
+    def get(self,request, *args, **kwargs):
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            self.nombre=usuario.nombre
+            return super(ModificarRecursoEstudiante, self).get(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect("/")
+    def get_context_data(self, ** kwargs):
+	context = super(ModificarRecursoEstudiante, self).get_context_data(** kwargs)
+        context['nombre'] = self.nombre
+        return context
 class ModificarProyecto(UpdateView):
     template_name='Proyeccion/modificarProyecto.html'
     model= InformacionDescriptiva
