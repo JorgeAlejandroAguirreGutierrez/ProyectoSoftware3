@@ -134,13 +134,15 @@ class CrearRecursoDocente(CreateView):
 	context = super(CrearRecursoDocente, self).get_context_data( ** kwargs)
         context['nombre'] = self.nombre
         return context
+    def get_success_url(self):
+        return reverse('ConsultarRecursoDocente', kwargs={'pk':self.kwargs['pk']})
     
 class CrearRecursoEstudiante(CreateView):
     template_name = 'Proyeccion/crearRecursoEstudiante.html'
     model = RecursoEstudiante
     form_class = RecursoEstudianteForm
     nombre = ""
-    success_url = reverse_lazy('ConsultarProyectos')
+    
     
     def get(self, request, * args, ** kwargs):
         if "cedula" in request.session:
@@ -160,6 +162,8 @@ class CrearRecursoEstudiante(CreateView):
 	context = super(CrearRecursoEstudiante, self).get_context_data( ** kwargs)
         context['nombre'] = self.nombre
         return context
+    def get_success_url(self):
+        return reverse('ConsultarRecursoEstudiante', kwargs={'pk': self.kwargs['pk']})
 
 class ModificarRecursoEstudiante(UpdateView):
     template_name='Proyeccion/modificarRecursoEstudiante.html'

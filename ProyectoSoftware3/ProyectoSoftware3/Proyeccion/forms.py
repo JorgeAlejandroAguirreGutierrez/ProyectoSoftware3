@@ -115,7 +115,7 @@ class RecursoEstudianteForm(forms.ModelForm):
         labels = {
             'nombre':'NOMBRE',
             'codigo':'CODIGO',
-            'programa':'PROGRAMA',
+            'programa_id':'PROGRAMA',
             'semestre':'SEMESTRE',
             'numero_horas_semana':'NUMERO HORAS SEMANA',
             'fecha_inicio':'FECHA INICIO',
@@ -125,6 +125,7 @@ class RecursoEstudianteForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control'}),
             'codigo': forms.TextInput(attrs={'class':'form-control'}),
+            'programa_id':forms.Select(attrs={'class':'form-control'}),
             'semestre': forms.TextInput(attrs={'class':'form-control', 'type':'number'}),
             'numero_horas_semana': forms.TextInput(attrs={'class':'form-control', 'type':'number'}),
             'fecha_inicio': forms.DateInput(attrs={'class':'form-control','type':'date'}),
@@ -159,7 +160,7 @@ class ModificarRecursoEstudianteForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control'}),
             'codigo': forms.TextInput(attrs={'class':'form-control'}),
-            'programa_id': forms.TextInput(attrs={'class':'form-control'}),
+            'programa_id': forms.Select(attrs={'class':'form-control'}),
             'semestre': forms.TextInput(attrs={'class':'form-control'}),
             'numero_horas_semana': forms.TextInput(attrs={'class':'form-control'}),
             'fecha_inicio': forms.DateInput(attrs={'class':'form-control','type':'date'}),
