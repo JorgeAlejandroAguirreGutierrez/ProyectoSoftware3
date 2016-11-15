@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import View
@@ -108,7 +109,6 @@ class ModificarRecursoEstudiante(UpdateView):
     model= RecursoEstudiante
     form_class = ModificarRecursoEstudianteForm
     nombre=""
-    success_url=reverse_lazy('ConsultarRecursoEstudiante',args='1')
     def get(self,request, *args, **kwargs):
         if "cedula" in request.session:
             cedula = request.session["cedula"]
@@ -121,12 +121,16 @@ class ModificarRecursoEstudiante(UpdateView):
 	context = super(ModificarRecursoEstudiante, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
+    def get_success_url(self):
+        proyecto=RecursoEstudiante.objects.get(id=self.kwargs['pk'])
+        return reverse('ConsultarRecursoEstudiante', kwargs={'pk': proyecto.proyecto_id})
+        
 class ModificarRecursoDocente(UpdateView):
     template_name='Proyeccion/modificarRecursoDocente.html'
     model= RecursoDocente
     form_class = ModificarRecursoDocenteForm
     nombre=""
-    success_url=reverse_lazy('ConsultarRecursoDocente',args='1')
+  
 
     def get(self,request, *args, **kwargs):
         if "cedula" in request.session:
@@ -140,6 +144,9 @@ class ModificarRecursoDocente(UpdateView):
 	context = super(ModificarRecursoDocente, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
+    def get_success_url(self):
+        proyecto=RecursoDocente.objects.get(id=self.kwargs['pk'])
+        return reverse('ConsultarRecursoDocente', kwargs={'pk': proyecto.proyecto_id})
 
 class ModificarProyecto(UpdateView):
     template_name='Proyeccion/modificarProyecto.html'

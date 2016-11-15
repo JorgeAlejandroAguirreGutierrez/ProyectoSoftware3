@@ -64,9 +64,8 @@ class InformacionDescriptiva(models.Model):
     impacto=models.TextField(null=False, blank=False)
     poblacion=models.TextField(null=False, blank=False)
     metodologia=models.TextField(null=False, blank=False)
-    
     def __str__(self):
-        return '%s'%(self.titulo)
+        return '%s'%(self.id)
 
 class Proyecto(models.Model):
     activo=models.BooleanField(blank=True)
