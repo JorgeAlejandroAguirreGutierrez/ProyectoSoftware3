@@ -7,9 +7,8 @@ from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import View
 import json
-from models import InformacionDescriptiva,RecursoEstudiante,RecursoDocente
-from models import Usuario
-from forms import InformacionDescriptivaForm,ModificarRecursoEstudianteForm,ModificarRecursoDocenteForm
+from models import *
+from forms import *
 
 # Create your views here.
 def docente(request):
@@ -72,6 +71,7 @@ class CrearProyecto(CreateView):
 	context = super(CrearProyecto, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
+    
 class ConsultarRecursoEstudiante(View):
     def get(self, request, * args, ** kwargs):
         informacion_list=RecursoEstudiante.objects.filter(proyecto_id=request.session['identificador'])
@@ -79,9 +79,12 @@ class ConsultarRecursoEstudiante(View):
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
             nombre=usuario.nombre
-            return render(request, "Proyeccion/consultarRecursoEstudiante.html", {'informacion_list':informacion_list,'nombre':nombre})
+            informacionDescriptivaId = kwargs["pk"]
+            informacion = InformacionDescriptiva.objects.get(id=informacionDescriptivaId)
+            return render(request, "Proyeccion/consultarRecursoEstudiante.html", {'informacion':informacion,'informacion_list':informacion_list,'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
+        
 class ConsultarRecursoDocente(View):
     def get(self, request, * args, ** kwargs):
         informacion_list=RecursoDocente.objects.filter(proyecto_id=request.session['identificador'])
@@ -89,7 +92,9 @@ class ConsultarRecursoDocente(View):
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
             nombre=usuario.nombre
-            return render(request, "Proyeccion/consultarRecursoDocente.html", {'informacion_list':informacion_list,'nombre':nombre})
+            informacionDescriptivaId = kwargs["pk"]
+            informacion = InformacionDescriptiva.objects.get(id=informacionDescriptivaId)
+            return render(request, "Proyeccion/consultarRecursoDocente.html", {'informacion':informacion,'informacion_list':informacion_list,'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
 
@@ -103,6 +108,58 @@ class ConsultarProyectos(View):
             return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list,'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
+        
+class CrearRecursoDocente(CreateView):
+    template_name = 'Proyeccion/crearRecursoDocente.html'
+    model = RecursoDocente
+    form_class = RecursoDocenteForm
+    nombre = ""
+    success_url = reverse_lazy('ConsultarProyectos')
+    
+    def get(self, request, * args, ** kwargs):
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            self.nombre = usuario.nombre
+            return super(CrearRecursoDocente, self).get(request, * args, ** kwargs)
+        else:
+            return HttpResponseRedirect("/")
+    
+    def form_valid(self, form):
+        proyecto=Proyecto.objects.get(id=self.kwargs["pk"])
+        form.instance.proyecto_id = proyecto
+        return super(CrearRecursoDocente, self).form_valid(form)
+    
+    def get_context_data(self, ** kwargs):
+	context = super(CrearRecursoDocente, self).get_context_data( ** kwargs)
+        context['nombre'] = self.nombre
+        return context
+    
+class CrearRecursoEstudiante(CreateView):
+    template_name = 'Proyeccion/crearRecursoEstudiante.html'
+    model = RecursoEstudiante
+    form_class = RecursoEstudianteForm
+    nombre = ""
+    success_url = reverse_lazy('ConsultarProyectos')
+    
+    def get(self, request, * args, ** kwargs):
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            self.nombre = usuario.nombre
+            return super(CrearRecursoEstudiante, self).get(request, * args, ** kwargs)
+        else:
+            return HttpResponseRedirect("/")
+        
+    def form_valid(self, form):
+        proyecto=Proyecto.objects.get(id=self.kwargs["pk"])
+        form.instance.proyecto_id = proyecto
+        return super(CrearRecursoEstudiante, self).form_valid(form)
+    
+    def get_context_data(self, ** kwargs):
+	context = super(CrearRecursoEstudiante, self).get_context_data( ** kwargs)
+        context['nombre'] = self.nombre
+        return context
 
 class ModificarRecursoEstudiante(UpdateView):
     template_name='Proyeccion/modificarRecursoEstudiante.html'
@@ -124,7 +181,7 @@ class ModificarRecursoEstudiante(UpdateView):
     def get_success_url(self):
         proyecto=RecursoEstudiante.objects.get(id=self.kwargs['pk'])
         return reverse('ConsultarRecursoEstudiante', kwargs={'pk': proyecto.proyecto_id})
-        
+    
 class ModificarRecursoDocente(UpdateView):
     template_name='Proyeccion/modificarRecursoDocente.html'
     model= RecursoDocente
