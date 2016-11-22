@@ -5,10 +5,11 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
+from django.views.generic import DeleteView
 from django.views.generic import View
+from forms import *
 import json
 from models import *
-from forms import *
 
 # Create your views here.
 def docente(request):
@@ -52,60 +53,124 @@ class Logear(View):
             response_data['respuesta'] = 'noExiste'          
         return HttpResponse(json.dumps(response_data), content_type='application/json')
 
+class ConsultarProyectos(View):
+    def get(self, request, * args, ** kwargs):
+        informacion_list = InformacionDescriptiva.objects.filter(coordinador_id=request.session['identificador'])
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            nombre = usuario.nombre
+            return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list, 'nombre':nombre})
+        else:
+            return HttpResponseRedirect("/")
     
 class CrearProyecto(CreateView):
     template_name = 'Proyeccion/crearProyecto.html'
     model = InformacionDescriptiva
     form_class = InformacionDescriptivaForm
     nombre = ""
-    success_url = reverse_lazy('listarProyectos',)
-    def get(self,request, *args, **kwargs):
+    success_url = reverse_lazy('ConsultarProyectos')
+    def get(self, request, * args, ** kwargs):
         if "cedula" in request.session:
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
-            self.nombre=usuario.nombre
-            return super(CrearProyecto, self).get(request, *args, **kwargs)
+            self.nombre = usuario.nombre
+            return super(CrearProyecto, self).get(request, * args, ** kwargs)
         else:
             return HttpResponseRedirect("/")
+    
+    def form_valid(self, form):
+        fechap = form.instance.fecha
+        fechainiciop = form.instance.fecha_inicio
+        fechafinalp = form.instance.fecha_final
+        if (fechap.month < fechainiciop.month):
+            if (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day)):
+                print "hola1"
+                return super(CrearProyecto, self).form_valid(form)
+            else:
+                print "hola2"
+                mensaje = "La fecha de inicio debe ser menor a la fecha final del proyecto"
+                form.add_error('fecha', mensaje)
+                return super(CrearProyecto, self).form_invalid(form)
+        else:
+            print fechap
+            print fechainiciop
+            print fechafinalp
+            print "hola3"
+            mensaje = "La fecha  registro de proyecto debe ser menor a la fecha de inicio del proyecto"
+            form.add_error('fecha', mensaje)
+            return super(CrearProyecto, self).form_invalid(form)
+    
     def get_context_data(self, ** kwargs):
-	context = super(CrearProyecto, self).get_context_data(** kwargs)
+	context = super(CrearProyecto, self).get_context_data( ** kwargs)
         context['nombre'] = self.nombre
         return context
     
-class ConsultarRecursoEstudiante(View):
+class ModificarProyecto(UpdateView):
+    template_name = 'Proyeccion/modificarProyecto.html'
+    model = InformacionDescriptiva
+    form_class = InformacionDescriptivaForm
+    nombre = ""
+    success_url = reverse_lazy('ConsultarProyectos')
     def get(self, request, * args, ** kwargs):
-        informacion_list=RecursoEstudiante.objects.filter(proyecto_id=request.session['identificador'])
         if "cedula" in request.session:
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
-            nombre=usuario.nombre
+            self.nombre = usuario.nombre
+            return super(ModificarProyecto, self).get(request, * args, ** kwargs)
+        else:
+            return HttpResponseRedirect("/")
+        
+    def form_valid(self, form):
+        fechap = form.instance.fecha
+        fechainiciop = form.instance.fecha_inicio
+        fechafinalp = form.instance.fecha_final
+        if (fechap.month < fechainiciop.month):
+            if (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day)):
+                return super(CrearProyecto, self).form_valid(form)
+            else:
+                mensaje = "La fecha de inicio debe ser menor a la fecha final del proyecto"
+                form.add_error('fecha', mensaje)
+                return super(CrearProyecto, self).form_invalid(form)
+        else:
+            mensaje = "La fecha  registro de proyecto debe ser menor a la fecha de inicio del proyecto"
+            form.add_error('fecha', mensaje)
+            return super(CrearProyecto, self).form_invalid(form)
+        
+        
+    def get_context_data(self, ** kwargs):
+	context = super(ModificarProyecto, self).get_context_data( ** kwargs)
+        context['nombre'] = self.nombre
+        return context
+    
+class EliminarProyecto(DeleteView):
+    template_name = 'Proyeccion/eliminarProyecto.html'
+    model = InformacionDescriptiva
+    success_url = reverse_lazy('ConsultarProyectos')
+    
+class ConsultarRecursoEstudiante(View):
+    def get(self, request, * args, ** kwargs):
+        informacion_list = RecursoEstudiante.objects.filter(proyecto_id=request.session['identificador'])
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            nombre = usuario.nombre
             informacionDescriptivaId = kwargs["pk"]
             informacion = InformacionDescriptiva.objects.get(id=informacionDescriptivaId)
-            return render(request, "Proyeccion/consultarRecursoEstudiante.html", {'informacion':informacion,'informacion_list':informacion_list,'nombre':nombre})
+            return render(request, "Proyeccion/consultarRecursoEstudiante.html", {'informacion':informacion, 'informacion_list':informacion_list, 'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
         
 class ConsultarRecursoDocente(View):
     def get(self, request, * args, ** kwargs):
-        informacion_list=RecursoDocente.objects.filter(proyecto_id=request.session['identificador'])
+        informacion_list = RecursoDocente.objects.filter(proyecto_id=request.session['identificador'])
         if "cedula" in request.session:
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
-            nombre=usuario.nombre
+            nombre = usuario.nombre
             informacionDescriptivaId = kwargs["pk"]
             informacion = InformacionDescriptiva.objects.get(id=informacionDescriptivaId)
-            return render(request, "Proyeccion/consultarRecursoDocente.html", {'informacion':informacion,'informacion_list':informacion_list,'nombre':nombre})
-        else:
-            return HttpResponseRedirect("/")
-
-class ConsultarProyectos(View):
-    def get(self, request, * args, ** kwargs):
-        informacion_list=InformacionDescriptiva.objects.filter(coordinador_id=request.session['identificador'])
-        if "cedula" in request.session:
-            cedula = request.session["cedula"]
-            usuario = Usuario.objects.get(cedula=cedula) 
-            nombre=usuario.nombre
-            return render(request, "Proyeccion/consultarProyectos.html", {'informacion_list':informacion_list,'nombre':nombre})
+            return render(request, "Proyeccion/consultarRecursoDocente.html", {'informacion':informacion, 'informacion_list':informacion_list, 'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
         
@@ -126,12 +191,12 @@ class CrearRecursoDocente(CreateView):
             return HttpResponseRedirect("/")
     
     def form_valid(self, form):
-        proyecto=Proyecto.objects.get(id=self.kwargs["pk"])
+        proyecto = Proyecto.objects.get(id=self.kwargs["pk"])
         form.instance.proyecto_id = proyecto
         return super(CrearRecursoDocente, self).form_valid(form)
     
     def get_context_data(self, ** kwargs):
-	context = super(CrearRecursoDocente, self).get_context_data( ** kwargs)
+	context = super(CrearRecursoDocente, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
     def get_success_url(self):
@@ -154,76 +219,57 @@ class CrearRecursoEstudiante(CreateView):
             return HttpResponseRedirect("/")
         
     def form_valid(self, form):
-        proyecto=Proyecto.objects.get(id=self.kwargs["pk"])
+        proyecto = Proyecto.objects.get(id=self.kwargs["pk"])
         form.instance.proyecto_id = proyecto
         return super(CrearRecursoEstudiante, self).form_valid(form)
     
     def get_context_data(self, ** kwargs):
-	context = super(CrearRecursoEstudiante, self).get_context_data( ** kwargs)
+	context = super(CrearRecursoEstudiante, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
     def get_success_url(self):
         return reverse('ConsultarRecursoEstudiante', kwargs={'pk': self.kwargs['pk']})
 
 class ModificarRecursoEstudiante(UpdateView):
-    template_name='Proyeccion/modificarRecursoEstudiante.html'
-    model= RecursoEstudiante
+    template_name = 'Proyeccion/modificarRecursoEstudiante.html'
+    model = RecursoEstudiante
     form_class = ModificarRecursoEstudianteForm
-    nombre=""
-    def get(self,request, *args, **kwargs):
+    nombre = ""
+    def get(self, request, * args, ** kwargs):
         if "cedula" in request.session:
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
-            self.nombre=usuario.nombre
-            return super(ModificarRecursoEstudiante, self).get(request, *args, **kwargs)
+            self.nombre = usuario.nombre
+            return super(ModificarRecursoEstudiante, self).get(request, * args, ** kwargs)
         else:
             return HttpResponseRedirect("/")
     def get_context_data(self, ** kwargs):
-	context = super(ModificarRecursoEstudiante, self).get_context_data(** kwargs)
+	context = super(ModificarRecursoEstudiante, self).get_context_data( ** kwargs)
         context['nombre'] = self.nombre
         return context
     def get_success_url(self):
-        proyecto=RecursoEstudiante.objects.get(id=self.kwargs['pk'])
+        proyecto = RecursoEstudiante.objects.get(id=self.kwargs['pk'])
         return reverse('ConsultarRecursoEstudiante', kwargs={'pk': proyecto.proyecto_id})
     
 class ModificarRecursoDocente(UpdateView):
-    template_name='Proyeccion/modificarRecursoDocente.html'
-    model= RecursoDocente
+    template_name = 'Proyeccion/modificarRecursoDocente.html'
+    model = RecursoDocente
     form_class = ModificarRecursoDocenteForm
-    nombre=""
+    nombre = ""
   
 
-    def get(self,request, *args, **kwargs):
+    def get(self, request, * args, ** kwargs):
         if "cedula" in request.session:
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
-            self.nombre=usuario.nombre
-            return super(ModificarRecursoDocente, self).get(request, *args, **kwargs)
+            self.nombre = usuario.nombre
+            return super(ModificarRecursoDocente, self).get(request, * args, ** kwargs)
         else:
             return HttpResponseRedirect("/")
     def get_context_data(self, ** kwargs):
-	context = super(ModificarRecursoDocente, self).get_context_data(** kwargs)
+	context = super(ModificarRecursoDocente, self).get_context_data( ** kwargs)
         context['nombre'] = self.nombre
         return context
     def get_success_url(self):
-        proyecto=RecursoDocente.objects.get(id=self.kwargs['pk'])
+        proyecto = RecursoDocente.objects.get(id=self.kwargs['pk'])
         return reverse('ConsultarRecursoDocente', kwargs={'pk': proyecto.proyecto_id})
-
-class ModificarProyecto(UpdateView):
-    template_name='Proyeccion/modificarProyecto.html'
-    model= InformacionDescriptiva
-    form_class = InformacionDescriptivaForm
-    nombre=""
-    success_url=reverse_lazy('ConsultarProyectos')
-    def get(self,request, *args, **kwargs):
-        if "cedula" in request.session:
-            cedula = request.session["cedula"]
-            usuario = Usuario.objects.get(cedula=cedula) 
-            self.nombre=usuario.nombre
-            return super(ModificarProyecto, self).get(request, *args, **kwargs)
-        else:
-            return HttpResponseRedirect("/")
-    def get_context_data(self, ** kwargs):
-	context = super(ModificarProyecto, self).get_context_data(** kwargs)
-        context['nombre'] = self.nombre
-        return context
