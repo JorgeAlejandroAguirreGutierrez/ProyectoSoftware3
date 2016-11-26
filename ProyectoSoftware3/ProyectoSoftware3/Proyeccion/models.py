@@ -72,6 +72,7 @@ class Proyecto(models.Model):
     informacion_descriptiva_id=models.ForeignKey(InformacionDescriptiva, on_delete=models.CASCADE)
     def __str__(self):
         return '%s'%(self.informacion_descriptiva_id)
+    
 class RecursoDocente(models.Model):
     docente_id=models.ForeignKey(Docente, on_delete=models.CASCADE)
     numero_horas_semana=models.IntegerField(null=False, blank=False)
@@ -100,7 +101,4 @@ class RecursoEstudiante(models.Model):
     fecha_final=models.DateField(null=False, blank=False)
     proyecto_id=models.ForeignKey(Proyecto, on_delete=models.CASCADE)
     def __str__(self):
-        return '%s'%(self.nombre)
-    
-
-    
+        return '%s'%(self.nombre) 
