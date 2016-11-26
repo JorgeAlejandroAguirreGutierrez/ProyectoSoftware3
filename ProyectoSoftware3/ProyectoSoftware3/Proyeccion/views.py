@@ -93,10 +93,6 @@ class CrearProyecto(CreateView):
                 form.add_error('fecha', mensaje)
                 return super(CrearProyecto, self).form_invalid(form)
         else:
-            print fechap
-            print fechainiciop
-            print fechafinalp
-            print "hola3"
             mensaje = "La fecha  registro de proyecto debe ser menor a la fecha de inicio del proyecto"
             form.add_error('fecha', mensaje)
             return super(CrearProyecto, self).form_invalid(form)
@@ -127,15 +123,15 @@ class ModificarProyecto(UpdateView):
         fechafinalp = form.instance.fecha_final
         if (fechap.month < fechainiciop.month):
             if (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day)):
-                return super(CrearProyecto, self).form_valid(form)
+                return super(ModificarProyecto, self).form_valid(form)
             else:
                 mensaje = "La fecha de inicio debe ser menor a la fecha final del proyecto"
                 form.add_error('fecha', mensaje)
-                return super(CrearProyecto, self).form_invalid(form)
+                return super(ModificarProyecto, self).form_invalid(form)
         else:
             mensaje = "La fecha  registro de proyecto debe ser menor a la fecha de inicio del proyecto"
             form.add_error('fecha', mensaje)
-            return super(CrearProyecto, self).form_invalid(form)
+            return super(ModificarProyecto, self).form_invalid(form)
         
         
     def get_context_data(self, ** kwargs):
@@ -191,9 +187,17 @@ class CrearRecursoDocente(CreateView):
             return HttpResponseRedirect("/")
     
     def form_valid(self, form):
-        proyecto = Proyecto.objects.get(id=self.kwargs["pk"])
-        form.instance.proyecto_id = proyecto
-        return super(CrearRecursoDocente, self).form_valid(form)
+        fechainiciop = form.instance.fecha_inicio
+        fechafinalp = form.instance.fecha_final
+        if (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day)):
+            proyecto = Proyecto.objects.get(id=self.kwargs["pk"])
+            form.instance.proyecto_id = proyecto
+            return super(CrearRecursoDocente, self).form_valid(form)    
+        else:
+            mensaje = "La fecha de inicio debe ser menor a la fecha final"
+            form.add_error('fecha_inicio', mensaje)
+            return super(CrearRecursoDocente, self).form_invalid(form)
+        
     
     def get_context_data(self, ** kwargs):
 	context = super(CrearRecursoDocente, self).get_context_data(** kwargs)
@@ -202,12 +206,42 @@ class CrearRecursoDocente(CreateView):
     def get_success_url(self):
         return reverse('ConsultarRecursoDocente', kwargs={'pk':self.kwargs['pk']})
     
+class ModificarRecursoDocente(UpdateView):
+    template_name = 'Proyeccion/modificarRecursoDocente.html'
+    model = RecursoDocente
+    form_class = ModificarRecursoDocenteForm
+    nombre = ""
+
+    def get(self, request, * args, ** kwargs):
+        if "cedula" in request.session:
+            cedula = request.session["cedula"]
+            usuario = Usuario.objects.get(cedula=cedula) 
+            self.nombre = usuario.nombre
+            return super(ModificarRecursoDocente, self).get(request, * args, ** kwargs)
+        else:
+            return HttpResponseRedirect("/")
+        
+    def get_context_data(self, ** kwargs):
+	context = super(ModificarRecursoDocente, self).get_context_data( ** kwargs)
+        context['nombre'] = self.nombre
+        return context
+    def get_success_url(self):
+        proyecto = RecursoDocente.objects.get(id=self.kwargs['pk'])
+        return reverse('ConsultarRecursoDocente', kwargs={'pk': proyecto.proyecto_id})
+
+class EliminarRecursoDocente(DeleteView):
+    template_name = 'Proyeccion/eliminarRecursoDocente.html'
+    model = RecursoDocente
+    
+    def get_sucess_url(self):
+        proyecto = RecursoDocente.objects.get(id=self.kwargs['pk'])
+        return reverse('ConsultarRecursoDocete', kwargs={'pk': proyecto.proyecto_id})
+    
 class CrearRecursoEstudiante(CreateView):
     template_name = 'Proyeccion/crearRecursoEstudiante.html'
     model = RecursoEstudiante
     form_class = RecursoEstudianteForm
     nombre = ""
-    
     
     def get(self, request, * args, ** kwargs):
         if "cedula" in request.session:
@@ -219,14 +253,22 @@ class CrearRecursoEstudiante(CreateView):
             return HttpResponseRedirect("/")
         
     def form_valid(self, form):
-        proyecto = Proyecto.objects.get(id=self.kwargs["pk"])
-        form.instance.proyecto_id = proyecto
-        return super(CrearRecursoEstudiante, self).form_valid(form)
+        fechainiciop = form.instance.fecha_inicio
+        fechafinalp = form.instance.fecha_final
+        if (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day)):
+            proyecto = Proyecto.objects.get(id=self.kwargs["pk"])
+            form.instance.proyecto_id = proyecto
+            return super(CrearRecursoEstudiante, self).form_valid(form)    
+        else:
+            mensaje = "La fecha de inicio debe ser menor a la fecha final"
+            form.add_error('fecha_inicio', mensaje)
+            return super(CrearRecursoEstudiante, self).form_invalid(form)
     
     def get_context_data(self, ** kwargs):
 	context = super(CrearRecursoEstudiante, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
+    
     def get_success_url(self):
         return reverse('ConsultarRecursoEstudiante', kwargs={'pk': self.kwargs['pk']})
 
@@ -251,25 +293,11 @@ class ModificarRecursoEstudiante(UpdateView):
         proyecto = RecursoEstudiante.objects.get(id=self.kwargs['pk'])
         return reverse('ConsultarRecursoEstudiante', kwargs={'pk': proyecto.proyecto_id})
     
-class ModificarRecursoDocente(UpdateView):
-    template_name = 'Proyeccion/modificarRecursoDocente.html'
-    model = RecursoDocente
-    form_class = ModificarRecursoDocenteForm
-    nombre = ""
-  
-
-    def get(self, request, * args, ** kwargs):
-        if "cedula" in request.session:
-            cedula = request.session["cedula"]
-            usuario = Usuario.objects.get(cedula=cedula) 
-            self.nombre = usuario.nombre
-            return super(ModificarRecursoDocente, self).get(request, * args, ** kwargs)
-        else:
-            return HttpResponseRedirect("/")
-    def get_context_data(self, ** kwargs):
-	context = super(ModificarRecursoDocente, self).get_context_data( ** kwargs)
-        context['nombre'] = self.nombre
-        return context
-    def get_success_url(self):
-        proyecto = RecursoDocente.objects.get(id=self.kwargs['pk'])
-        return reverse('ConsultarRecursoDocente', kwargs={'pk': proyecto.proyecto_id})
+class EliminarRecursoEstudiante(DeleteView):
+    template_name = 'Proyeccion/eliminarRecursoEstudiante.html'
+    model = RecursoEstudiante
+    
+    def get_sucess_url(self):
+        proyecto = RecursoEstudiante.objects.get(id=self.kwargs['pk'])
+        return reverse('ConsultarRecursoEstudiante', kwargs={'pk': proyecto.proyecto_id})
+    

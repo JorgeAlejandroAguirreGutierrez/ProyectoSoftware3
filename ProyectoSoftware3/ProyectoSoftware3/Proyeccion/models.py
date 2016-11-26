@@ -101,7 +101,4 @@ class RecursoEstudiante(models.Model):
     fecha_final=models.DateField(null=False, blank=False)
     proyecto_id=models.ForeignKey(Proyecto, on_delete=models.CASCADE)
     def __str__(self):
-        return '%s'%(self.nombre)
-    
-
-    
+        return '%s'%(self.nombre) 
