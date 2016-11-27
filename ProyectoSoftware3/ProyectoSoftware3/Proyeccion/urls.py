@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^CrearRecursoEstudiante/(?P<pk>\d+)$', CrearRecursoEstudiante.as_view()),
     url(r'^ModificarProyecto/(?P<pk>\d+)$', ModificarProyecto.as_view()),
     url(r'^EliminarProyecto/(?P<pk>\d+)$', EliminarProyecto.as_view()),
+    url(r'^ModificarRecursoDocente/(?P<pk>\d+)$', ModificarRecursoDocente.as_view()),
     url(r'^ModificarRecursoEstudiante/(?P<pk>\d+)$', ModificarRecursoEstudiante.as_view()),
     url(r'^EliminarRecursoEstudiante/(?P<pk>\d+)$', EliminarRecursoEstudiante.as_view()),
     url(r'^EliminarRecursoDocente/(?P<pk>\d+)$', EliminarRecursoDocente.as_view()),

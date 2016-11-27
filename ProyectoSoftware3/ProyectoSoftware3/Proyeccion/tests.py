@@ -35,58 +35,62 @@ class RegisterProjectTest(TestCase):
         correo="SAUD@UCALDAS.EDU.CO", telefono="8754522")
         
     def test_registerProjectValidate(self):
-      
-        docente= Docente.objects.get(valor_hora=35000)
-        departamento= Departamento.objects.get(nombre="SALUD INTERNA")
-        facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
-        modalidad= Modalidad.objects.get(nombre="SEMINARIO",)
-        try:     
-            proyecto=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
+        try: 
+            proyecto=Proyecto(activo=True)
+            docente= Docente.objects.get(valor_hora=35000)
+            departamento= Departamento.objects.get(nombre="SALUD INTERNA")
+            facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
+            modalidad= Modalidad.objects.get(nombre="SEMINARIO",)
+            proyecto.save()
+            informacion=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
             numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
             coordinador_id=docente, departamento_id=departamento, facultad_id=facultad,
             fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
             problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
             objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-            impacto="IMPACTO PROYECTO", poblacion="POBLACION DEL PROYECTO", metodologia="METODOLOGIA PROYECTO")
-            proyecto.save()
+            impacto="IMPACTO PROYECTO", poblacion="POBLACION DEL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
+            informacion.save()
             self.assertTrue(True) 
         except:
             self.assertTrue(False)
             
     def test_registerProjectInvalidateEmptyFacultad(self):
-        docente= Docente.objects.get(valor_hora=35000)
-        departamento= Departamento.objects.get(nombre="SALUD INTERNA")
-        facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
-        modalidad= Modalidad.objects.get(nombre="SEMINARIO",)
-        
-        try:     
-            proyecto=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
+        try: 
+            proyecto=Proyecto(activo=True)
+            docente= Docente.objects.get(valor_hora=35000)
+            departamento= Departamento.objects.get(nombre="SALUD INTERNA")
+            modalidad= Modalidad.objects.get(nombre="SEMINARIO",)
+            proyecto.save()
+            
+            informacion=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
             numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
             coordinador_id=docente, departamento_id=departamento, facultad_id=None,
             fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
             problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
             objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-            impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
-            proyecto.save()
+            impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
+            informacion.save()
             self.assertTrue(False) 
         except:
             self.assertTrue(True)
             
             
     def test_registerProjectInvalidateEmptyDocente(self):
-        departamento= Departamento.objects.get(nombre="SALUD INTERNA")
-        facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
-        modalidad= Modalidad.objects.get(nombre="SEMINARIO",)
-        
-        try:     
-            proyecto=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
+        try:
+            proyecto=Proyecto(activo=True)
+            departamento= Departamento.objects.get(nombre="SALUD INTERNA")
+            facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
+            modalidad= Modalidad.objects.get(nombre="SEMINARIO",)
+            
+            proyecto.save() 
+            informacion=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
             numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
             coordinador_id=None, departamento_id=departamento, facultad_id=facultad,
             fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
             problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
             objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-            impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
-            proyecto.save()
+            impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
+            informacion.save()
             self.assertTrue(False) 
         except:
             self.assertTrue(True)
@@ -103,13 +107,15 @@ class updateProjectTest(TestCase):
         facultad=Facultad.objects.create(nombre="CIENCIAS PARA LA SALUD", decano_id=docente,
         correo="SAUD@UCALDAS.EDU.CO", telefono="8754522")
         
+        proyecto=Proyecto.objects.create(activo=True)
+        
         InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
         numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
         coordinador_id=docente, departamento_id=departamento, facultad_id=facultad,
         fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
         problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
         objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
+        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
         
     def test_updateProjectValidate(self):
         try:
@@ -151,13 +157,15 @@ class DeleteProjectTest(TestCase):
         facultad=Facultad.objects.create(nombre="CIENCIAS PARA LA SALUD", decano_id=docente,
         correo="SAUD@UCALDAS.EDU.CO", telefono="8754522")
         
+        proyecto=Proyecto.objects.create(activo=True)
+        
         InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
         numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
         coordinador_id=docente, departamento_id=departamento, facultad_id=facultad,
         fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
         problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
         objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
+        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
         
             
     def test_DeleteProjectValidate(self):
@@ -188,15 +196,17 @@ class RegisterTeachingTest(TestCase):
         facultad=Facultad.objects.create(nombre="CIENCIAS PARA LA SALUD", decano_id=docente,
         correo="SAUD@UCALDAS.EDU.CO", telefono="8754522")
         
-        informacion=InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
+        proyecto=Proyecto.objects.create(activo=True)
+        
+        InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
         numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
         coordinador_id=docente, departamento_id=departamento, facultad_id=facultad,
         fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
         problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
         objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
+        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
         
-        Proyecto.objects.create(activo=True, informacion_descriptiva_id=informacion)
+        
         
         
     def test_registerTeachingValidate(self):
@@ -243,15 +253,16 @@ class updateTeachingTest(TestCase):
         facultad=Facultad.objects.create(nombre="CIENCIAS PARA LA SALUD", decano_id=docente,
         correo="SAUD@UCALDAS.EDU.CO", telefono="8754522")
         
-        informacion=InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
+        proyecto=Proyecto.objects.create(activo=True)
+        
+        InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
         numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
         coordinador_id=docente, departamento_id=departamento, facultad_id=facultad,
         fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
         problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
         objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
+        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
         
-        proyecto=Proyecto.objects.create(activo=True, informacion_descriptiva_id=informacion)
         RecursoDocente.objects.create(numero_horas_semana=2, fecha_inicio="2016-07-12", fecha_final="2016-07-18", tipo_financiacion="RECURRENTE", docente_id=docente, proyecto_id=proyecto)
         
     def test_updateTeachingValidate(self):
@@ -295,15 +306,17 @@ class RegisterStudentTest(TestCase):
         correo="INGENIERIAS@UCALDAS.EDU.CO", telefono="8750584")
         Programa.objects.create(nombre="INGENIERIA DE SISTEMAS Y COMPUTACION", director_id=docente, facultad_id=facultad2)
         
-        informacion=InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
+        proyecto=Proyecto.objects.create(activo=True)
+        
+        InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
         numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
         coordinador_id=docente, departamento_id=departamento, facultad_id=facultad,
         fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
         problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
         objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
+        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
         
-        Proyecto.objects.create(activo=True, informacion_descriptiva_id=informacion)
+        
         
     def test_registerStudentValidate(self):
         try:
@@ -351,22 +364,21 @@ class updateStudentTest(TestCase):
         correo="INGENIERIAS@UCALDAS.EDU.CO", telefono="8750584")
         programa=Programa.objects.create(nombre="INGENIERIA DE SISTEMAS Y COMPUTACION", director_id=docente, facultad_id=facultad2)
         
-        informacion=InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
+        proyecto=Proyecto.objects.create(activo=True)
+        
+        InformacionDescriptiva.objects.create(fecha="2016-05-05", codigo="VPU-000", 
         numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
         coordinador_id=docente, departamento_id=departamento, facultad_id=facultad,
         fecha_inicio="2016-07-07", fecha_final="2016-08-08",modalidad_id=modalidad, 
         problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
         objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
-        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO")
-        
-        proyecto=Proyecto.objects.create(activo=True, informacion_descriptiva_id=informacion)
+        impacto="IMPACTO PROYECTO", poblacion="POBLACION AL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
+ 
         RecursoEstudiante.objects.create(nombre="JULIAN",codigo="1701313530",semestre=6,numero_horas_semana=5, fecha_inicio="2016-07-12", fecha_final="2016-07-18", programa_id=programa, proyecto_id=proyecto)
         
     def test_updateStudentValidate(self):
         try:
             recursoEstudiante=RecursoEstudiante.objects.get(codigo="1701313530")
-            print recursoEstudiante.nombre
-            print recursoEstudiante.codigo
             recursoEstudiante.nombre="CRISTIAN"
             recursoEstudiante.numero_horas_semana=10
             recursoEstudiante.save()
@@ -390,4 +402,98 @@ class updateStudentTest(TestCase):
             recursoEstudiante.save()
             self.assertTrue(False) 
         except:       
-            self.assertTrue(True)    
+            self.assertTrue(True)
+                 
+class IntegrativeTest(TestCase): 
+    def setUp(self):
+        Modalidad.objects.create(nombre="SEMINARIO", relevancia=5)
+        usuario1=Usuario.objects.create(nombre="GIAN", cedula="1053855850", clave="12345")
+        usuario2=Usuario.objects.create(nombre="GIAN", cedula="1053855855", clave="123")
+        vinculacion1=VinculacionDocente.objects.create(tipo="DOCENTE DE PLANTA")
+        vinculacion2=VinculacionDocente.objects.create(tipo="DOCENTE OCASIONAL")
+        docente1=Docente.objects.create(valor_hora=35000, vinculacion_id=vinculacion1, usuario_id=usuario1)
+        docente2=Docente.objects.create(valor_hora=45000, vinculacion_id=vinculacion2, usuario_id=usuario2)
+        Departamento.objects.create(nombre="SALUD INTERNA", director_id=docente1, 
+        correo="SALUDINTERNA@UCALDAS.EDU.CO", telefono="8595231")
+        facultad=Facultad.objects.create(nombre="CIENCIAS PARA LA SALUD", decano_id=docente2,
+        correo="SAUD@UCALDAS.EDU.CO", telefono="8754522")
+        Programa.objects.create(nombre="MEDICINA", director_id=docente2, facultad_id=facultad)
+        
+    def test_registerProjectTeachingStudentValidate(self):
+        try: 
+            docente1= Docente.objects.get(valor_hora=35000)
+            docente2= Docente.objects.get(valor_hora=45000)
+            departamento= Departamento.objects.get(nombre="SALUD INTERNA")
+            facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
+            modalidad= Modalidad.objects.get(nombre="SEMINARIO")
+            programa=Programa.objects.get(nombre="MEDICINA")
+            proyecto=Proyecto(activo=True)
+            proyecto.save()
+            informacion=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
+            numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
+            coordinador_id=docente1, departamento_id=departamento, facultad_id=facultad,
+            fecha_inicio="2016-07-07", fecha_final="2016-08-08", modalidad_id=modalidad, 
+            problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
+            objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
+            impacto="IMPACTO PROYECTO", poblacion="POBLACION DEL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
+            informacion.save()
+            recursoDocente=RecursoDocente(docente_id=docente2, numero_horas_semana=5, fecha_inicio="2016-05-10", fecha_final="2016-05-25", tipo_financiacion="RECURRENTE",proyecto_id=proyecto)
+            recursoDocente.save()
+            recursoEstudiante=RecursoEstudiante(nombre="PABLO",codigo="7854125",programa_id=programa, semestre=4, numero_horas_semana=3, fecha_inicio="2016-05-10", fecha_final="2016-05-25",proyecto_id=proyecto)
+            recursoEstudiante.save()
+            self.assertTrue(True) 
+        except:
+            self.assertTrue(False)
+            
+    def test_registerProjectTeachingStudentInvalidateEmptyDocente(self):
+        try: 
+            docente1= Docente.objects.get(valor_hora=35000)
+#            docente2= Docente.objects.get(valor_hora=45000)
+            departamento= Departamento.objects.get(nombre="SALUD INTERNA")
+            facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
+            modalidad= Modalidad.objects.get(nombre="SEMINARIO")
+            programa=Programa.objects.get(nombre="MEDICINA")
+            proyecto=Proyecto(activo=True)
+            proyecto.save()
+            informacion=InformacionDescriptiva(fecha="2016-05-05", codigo="VPU-000", 
+            numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
+            coordinador_id=docente1, departamento_id=departamento, facultad_id=facultad,
+            fecha_inicio="2016-07-07", fecha_final="2016-08-08", modalidad_id=modalidad, 
+            problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
+            objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
+            impacto="IMPACTO PROYECTO", poblacion="POBLACION DEL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
+            informacion.save()
+            recursoDocente=RecursoDocente(docente_id=None, numero_horas_semana=5, fecha_inicio="2016-05-10", fecha_final="2016-05-25", tipo_financiacion="RECURRENTE",proyecto_id=proyecto)
+            recursoDocente.save()
+            recursoEstudiante=RecursoEstudiante(nombre="PABLO",codigo="7854125",programa_id=programa, semestre=4, numero_horas_semana=3, fecha_inicio="2016-05-10", fecha_final="2016-05-25", proyecto_id=proyecto)
+            recursoEstudiante.save()
+            self.assertTrue(False) 
+        except:
+            self.assertTrue(True)
+            
+            
+    def test_registerProjectTeachingStudentInvalidateEmptyCodigo(self):
+        try: 
+            docente1= Docente.objects.get(valor_hora=35000)
+            docente2= Docente.objects.get(valor_hora=45000)
+            departamento= Departamento.objects.get(nombre="SALUD INTERNA")
+            facultad= Facultad.objects.get(nombre="CIENCIAS PARA LA SALUD")
+            modalidad= Modalidad.objects.get(nombre="SEMINARIO")
+            programa=Programa.objects.get(nombre="MEDICINA")
+            proyecto=Proyecto(activo=True)
+            proyecto.save()
+            informacion=InformacionDescriptiva(fecha="2016-05-05", codigo=None, 
+            numero_convenio="UNIVERSIDAD DE CALDAS", titulo="SEMINARIO DE MEDICINA", 
+            coordinador_id=docente1, departamento_id=departamento, facultad_id=facultad,
+            fecha_inicio="2016-07-07", fecha_final="2016-08-08", modalidad_id=modalidad, 
+            problema="PROBLEMA PROYECTO", justificacion="JUSTIFICACION PROYECTO", 
+            objetivo_general="OBJETIVO PROYECTO", objetivos_especificos="OBJETIVOS ESPECIFICOS PROYECTO", 
+            impacto="IMPACTO PROYECTO", poblacion="POBLACION DEL PROYECTO", metodologia="METODOLOGIA PROYECTO", proyecto_id=proyecto)
+            informacion.save()
+            recursoDocente=RecursoDocente(docente_id=docente2, numero_horas_semana=5, fecha_inicio="2016-05-10", fecha_final="2016-05-25", tipo_financiacion="RECURRENTE",proyecto_id=proyecto)
+            recursoDocente.save()
+            recursoEstudiante=RecursoEstudiante(nombre="PABLO",codigo="7854125",programa_id=programa, semestre=4, numero_horas_semana=3, fecha_inicio="2016-05-10", fecha_final="2016-05-25", proyecto_id=proyecto)
+            recursoEstudiante.save()
+            self.assertTrue(False) 
+        except:
+            self.assertTrue(True)

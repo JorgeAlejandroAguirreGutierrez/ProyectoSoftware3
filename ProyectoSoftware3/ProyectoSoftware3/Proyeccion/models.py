@@ -45,6 +45,11 @@ class Modalidad(models.Model):
     def __str__(self):
         return '%s'%(self.nombre)
     
+class Proyecto(models.Model):
+    activo=models.BooleanField(blank=True)
+    def __str__(self):
+        return '%s'%(self.id)
+    
 class InformacionDescriptiva(models.Model):
     
     fecha=models.DateField(null=False, blank=False)
@@ -64,14 +69,9 @@ class InformacionDescriptiva(models.Model):
     impacto=models.TextField(null=False, blank=False)
     poblacion=models.TextField(null=False, blank=False)
     metodologia=models.TextField(null=False, blank=False)
+    proyecto_id=models.ForeignKey(Proyecto, on_delete=models.CASCADE, default=None)
     def __str__(self):
         return '%s'%(self.id)
-
-class Proyecto(models.Model):
-    activo=models.BooleanField(blank=True)
-    informacion_descriptiva_id=models.ForeignKey(InformacionDescriptiva, on_delete=models.CASCADE)
-    def __str__(self):
-        return '%s'%(self.informacion_descriptiva_id)
     
 class RecursoDocente(models.Model):
     docente_id=models.ForeignKey(Docente, on_delete=models.CASCADE)

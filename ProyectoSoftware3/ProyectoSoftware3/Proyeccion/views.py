@@ -83,17 +83,13 @@ class CrearProyecto(CreateView):
         fechap = form.instance.fecha
         fechainiciop = form.instance.fecha_inicio
         fechafinalp = form.instance.fecha_final
-        if (fechap.month < fechainiciop.month):
-            if (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day)):
-                print "hola1"
-                return super(CrearProyecto, self).form_valid(form)
-            else:
-                print "hola2"
-                mensaje = "La fecha de inicio debe ser menor a la fecha final del proyecto"
-                form.add_error('fecha', mensaje)
-                return super(CrearProyecto, self).form_invalid(form)
+        if ((fechainiciop.month>fechap.month or (fechainiciop.month==fechap.month and fechainiciop.day>fechap.day)) and (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day))):
+            proyecto=Proyecto(activo=True)
+            proyecto.save()
+            form.instance.proyecto_id=proyecto
+            return super(CrearProyecto, self).form_valid(form)
         else:
-            mensaje = "La fecha  registro de proyecto debe ser menor a la fecha de inicio del proyecto"
+            mensaje = "La fecha de inicio debe ser menor a la fecha final del proyecto"
             form.add_error('fecha', mensaje)
             return super(CrearProyecto, self).form_invalid(form)
     
@@ -121,19 +117,13 @@ class ModificarProyecto(UpdateView):
         fechap = form.instance.fecha
         fechainiciop = form.instance.fecha_inicio
         fechafinalp = form.instance.fecha_final
-        if (fechap.month < fechainiciop.month):
-            if (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day)):
-                return super(ModificarProyecto, self).form_valid(form)
-            else:
-                mensaje = "La fecha de inicio debe ser menor a la fecha final del proyecto"
-                form.add_error('fecha', mensaje)
-                return super(ModificarProyecto, self).form_invalid(form)
+        if ((fechainiciop.month>fechap.month or (fechainiciop.month==fechap.month and fechainiciop.day>fechap.day)) and (fechafinalp.month > fechainiciop.month or (fechafinalp.month == fechainiciop.month and fechafinalp.day >= fechainiciop.day))):
+            return super(ModificarProyecto, self).form_valid(form)
         else:
-            mensaje = "La fecha  registro de proyecto debe ser menor a la fecha de inicio del proyecto"
+            mensaje = "La fecha de inicio debe ser menor a la fecha final del proyecto"
             form.add_error('fecha', mensaje)
             return super(ModificarProyecto, self).form_invalid(form)
-        
-        
+
     def get_context_data(self, ** kwargs):
 	context = super(ModificarProyecto, self).get_context_data( ** kwargs)
         context['nombre'] = self.nombre
@@ -146,26 +136,24 @@ class EliminarProyecto(DeleteView):
     
 class ConsultarRecursoEstudiante(View):
     def get(self, request, * args, ** kwargs):
-        informacion_list = RecursoEstudiante.objects.filter(proyecto_id=request.session['identificador'])
+        informacion_list = RecursoEstudiante.objects.filter(proyecto_id=kwargs["pk"])
         if "cedula" in request.session:
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
             nombre = usuario.nombre
-            informacionDescriptivaId = kwargs["pk"]
-            informacion = InformacionDescriptiva.objects.get(id=informacionDescriptivaId)
+            informacion = Proyecto.objects.get(id=kwargs["pk"])
             return render(request, "Proyeccion/consultarRecursoEstudiante.html", {'informacion':informacion, 'informacion_list':informacion_list, 'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
         
 class ConsultarRecursoDocente(View):
     def get(self, request, * args, ** kwargs):
-        informacion_list = RecursoDocente.objects.filter(proyecto_id=request.session['identificador'])
+        informacion_list = RecursoDocente.objects.filter(proyecto_id=kwargs["pk"])
         if "cedula" in request.session:
             cedula = request.session["cedula"]
             usuario = Usuario.objects.get(cedula=cedula) 
             nombre = usuario.nombre
-            informacionDescriptivaId = kwargs["pk"]
-            informacion = InformacionDescriptiva.objects.get(id=informacionDescriptivaId)
+            informacion = Proyecto.objects.get(id=kwargs["pk"])
             return render(request, "Proyeccion/consultarRecursoDocente.html", {'informacion':informacion, 'informacion_list':informacion_list, 'nombre':nombre})
         else:
             return HttpResponseRedirect("/")
@@ -204,7 +192,7 @@ class CrearRecursoDocente(CreateView):
         context['nombre'] = self.nombre
         return context
     def get_success_url(self):
-        return reverse('ConsultarRecursoDocente', kwargs={'pk':self.kwargs['pk']})
+        return reverse('ConsultarRecursoDocente', kwargs=self.kwargs)
     
 class ModificarRecursoDocente(UpdateView):
     template_name = 'Proyeccion/modificarRecursoDocente.html'
@@ -232,7 +220,6 @@ class ModificarRecursoDocente(UpdateView):
 class EliminarRecursoDocente(DeleteView):
     template_name = 'Proyeccion/eliminarRecursoDocente.html'
     model = RecursoDocente
-    
     def get_sucess_url(self):
         proyecto = RecursoDocente.objects.get(id=self.kwargs['pk'])
         return reverse('ConsultarRecursoDocete', kwargs={'pk': proyecto.proyecto_id})
@@ -270,7 +257,7 @@ class CrearRecursoEstudiante(CreateView):
         return context
     
     def get_success_url(self):
-        return reverse('ConsultarRecursoEstudiante', kwargs={'pk': self.kwargs['pk']})
+        return reverse('ConsultarRecursoEstudiante', kwargs=self.kwargs)
 
 class ModificarRecursoEstudiante(UpdateView):
     template_name = 'Proyeccion/modificarRecursoEstudiante.html'
