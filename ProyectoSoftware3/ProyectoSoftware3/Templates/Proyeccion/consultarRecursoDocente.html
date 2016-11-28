@@ -16,17 +16,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for informacion in informacion_list %}
+            {% for info in informacion_list %}
             <tr>
-                <td>{{informacion.docente_id}}</td>
-                <td>{{informacion.numero_horas_semana}}</td>
-                <td>{{informacion.fecha_inicio}}</td>
-                <td>{{informacion.fecha_final}}</td>
-                <td>{{informacion.tipo_financiacion}}</td>
-                <td>{{informacion.proyecto_id}}</td>
+                <td>{{info.docente_id}}</td>
+                <td>{{info.numero_horas_semana}}</td>
+                <td>{{info.fecha_inicio}}</td>
+                <td>{{info.fecha_final}}</td>
+                <td>{{info.tipo_financiacion}}</td>
+                <td>{{info.proyecto_id}}</td>
                 <td>
-                    <a href="/Proyeccion/ModificarRecursoDocente/{{informacion.id}}">Editar</a>
-                    <a href="/Proyeccion/EliminarRecursoDocente/{{informacion.id}}">Eliminar</a>
+                    <a href="/Proyeccion/ModificarRecursoDocente/{{info.id}}">Editar</a>
+                    <a href="/Proyeccion/EliminarRecursoDocente/{{info.id}}">Eliminar</a>
                 </td>
             </tr>
             {% endfor %}
