@@ -163,7 +163,6 @@ class CrearRecursoDocente(CreateView):
     model = RecursoDocente
     form_class = RecursoDocenteForm
     nombre = ""
-    success_url = reverse_lazy('ConsultarProyectos')
     
     def get(self, request, * args, ** kwargs):
         if "cedula" in request.session:
@@ -186,11 +185,11 @@ class CrearRecursoDocente(CreateView):
             form.add_error('fecha_inicio', mensaje)
             return super(CrearRecursoDocente, self).form_invalid(form)
         
-    
     def get_context_data(self, ** kwargs):
 	context = super(CrearRecursoDocente, self).get_context_data(** kwargs)
         context['nombre'] = self.nombre
         return context
+    
     def get_success_url(self):
         return reverse('ConsultarRecursoDocente', kwargs=self.kwargs)
     
